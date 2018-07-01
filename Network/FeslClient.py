@@ -1,5 +1,6 @@
 from DataClasses import Client
 from Globals import Clients
+from Framework.Client.Fesl import *
 from Logger import Log
 from Utilities.Packet import Packet
 
@@ -72,8 +73,8 @@ class HANDLER(Protocol):
         if Packet(data).verifyPacketLength(packet_length) and isValidPacket:
             TXN = dataObj.get("PacketData", "TXN")
 
-            if packet_type == None:
-                pass
+            if packet_type == "fsys":
+                fsys.ReceivePacket(self, dataObj, TXN)
             else:
                 self.logger_err.new_message("[" + self.ip + ":" + str(self.port) + ']<-- Got unknown message type (' + packet_type + ")", 2)
         elif not isValidPacket:
