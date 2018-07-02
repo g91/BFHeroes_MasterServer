@@ -75,7 +75,6 @@ class Handler(Resource):
             return response.encode()
         else:
             logger.new_message("Unknown GET: " + uri, 2)
-            print(uri.split(":")[0])
 
     def render_POST(self, request):
         uri = request.uri
