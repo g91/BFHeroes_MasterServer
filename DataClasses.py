@@ -44,9 +44,9 @@ class Server:
     newPlayerID = 0
     connectedPlayers = []
 
-    validServers = {}
+    validServers = {'4tzWxk': 1}  # ServerPassword: UserID
 
-    validPersonas = {}
+    validPersonas = {'BFHeroesServerPC': 1}  # PersonaName: PersonaID
 
     ipAddr = None
     networkInt = None
