@@ -39,7 +39,7 @@ class Database(object):
                   {'Entitlements': ['userID integer', 'entitlementId integer PRIMARY KEY AUTOINCREMENT UNIQUE', 'entitlementTag string', 'status string']},
                   {'Personas': ['userID integer', 'personaID integer PRIMARY KEY AUTOINCREMENT UNIQUE', 'personaName string']},
                   {'Sessions': ['userID integer UNIQUE', 'sessionKey string UNIQUE']},
-                  {'Stats': ['forID integer', 'IDType string', 'key string', 'value integer', 'text string']}]
+                  {'Stats': ['forID integer', 'IDType string', 'key string', 'value string', 'text string']}]
 
         cursor = self.connection.cursor()
 
@@ -154,9 +154,14 @@ class Database(object):
             data = cursor.fetchone()
 
             if data is not None:
-                values.append({'name': key, 'value': data[3], 'text': data[4]})
+                if data[4] is None:
+                    text = ""
+                else:
+                    text = data[4]
+
+                values.append({'name': key, 'value': data[3], 'text': text})
             else:
-                values.append({'name': key, 'value': 0.0, 'text': ""})
+                values.append({'name': key, 'value': 0, 'text': ""})
 
             self.connection.commit()
             cursor.close()
