@@ -74,7 +74,7 @@ def MainApp():
 
     try:
         factory = Factory()
-        factory.protocol = FeslClient.HANDLER
+        factory.protocol = FeslServer.HANDLER
         reactor.listenSSL(fesl_server_port, factory, SSLContext)
         Log("FeslServer", "\033[32;1m").new_message("Created TCP Socket (now listening on port " + str(fesl_server_port) + ")", 1)
     except Exception as BindError:
