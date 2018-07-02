@@ -22,11 +22,11 @@ def HandleGetStats(self, data):
     if isUser:
         keysValues = db.GetStats(self.CONNOBJ.userID, "account", requestedKeys)
     else:
-        keysValues = db.GetStats(self.CONNOBJ.personaID, "persona", requestedKeys)
+        keysValues = db.GetStats(data.get('PacketData', 'owner'), "persona", requestedKeys)
 
     for i in range(len(requestedKeys)):
         toSend.set("PacketData", "stats." + str(i) + ".key", keysValues[i]['name'])
-        toSend.set("PacketData", "stats." + str(i) + ".value", keysValues[i]['value'])
+        toSend.set("PacketData", "stats." + str(i) + ".value", str(keysValues[i]['value']))
         toSend.set("PacketData", "stats." + str(i) + ".text", keysValues[i]['text'])
 
     toSend.set("PacketData", "stats.[]", str(requestedKeysNumber))
