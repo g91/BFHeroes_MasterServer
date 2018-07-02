@@ -85,6 +85,15 @@ class Handler(Resource):
             response += '<roster relationships="0"/><success code="SUCCESS"/>'
 
             return response.encode()
+        elif uri.find('/nucleus/name/') != -1:
+            userID = uri.split("/")[-1]
+
+            logger.new_message("[MAGMA] Sending name response for PID " + str(userID))
+
+            response = header
+            response += "<name>" + db.getPersonaName(userID) + "</name>"
+
+            return response.encode()
         else:
             logger.new_message("Unknown GET: " + uri, 2)
 
