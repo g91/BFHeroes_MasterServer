@@ -1,7 +1,10 @@
 from DataClasses import Server
+from Framework.Server.Fesl import *
 from Globals import Servers
 from Logger import Log
 from Utilities.Packet import Packet
+
+from base64 import b64decode
 
 from twisted.internet.protocol import Protocol
 
@@ -71,8 +74,12 @@ class HANDLER(Protocol):
         if Packet(data).verifyPacketLength(packet_length) and isValidPacket:
             TXN = dataObj.get("PacketData", "TXN")
 
-            if packet_type == None:
-                pass
+            if packet_type == 'fsys':
+                fsys.ReceivePacket(self, dataObj, TXN)
+            elif packet_type == 'acct':
+                acct.ReceivePacket(self, dataObj, TXN)
+            elif packet_type == 'rank':
+                rank.ReceivePacket(self, dataObj, TXN)
             else:
                 self.logger_err.new_message("[" + self.ip + ":" + str(self.port) + ']<-- Got unknown message type (' + packet_type + ")", 2)
         elif not isValidPacket:

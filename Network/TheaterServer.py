@@ -1,3 +1,4 @@
+from Framework.Server.Theater import *
 from Logger import Log
 from Utilities.Packet import Packet
 
@@ -46,11 +47,24 @@ class TCPHandler(Protocol):
         self.logger.new_message("[" + self.ip + ":" + str(self.port) + "]<-- " + repr(data), 3)
 
         for dataObj in dataObjs:
-            if dataObj['type'] == None:
-                pass
+            if dataObj['type'] == 'CONN':
+                CONN.ReceiveRequest(self, dataObj['data'])
+            elif dataObj['type'] == 'USER':
+                USER.ReceiveRequest(self, dataObj['data'])
+            elif dataObj['type'] == 'CGAM':
+                CGAM.ReceiveRequest(self, dataObj['data'])
+            elif dataObj['type'] == 'UGAM':
+                UGAM.ReceivePacket(self, dataObj['data'])
+            elif dataObj['type'] == 'UBRA':
+                UBRA.ReceivePacket(self, dataObj['data'])
+            elif dataObj['type'] == 'EGRS':
+                EGRS.ReceivePacket(self, dataObj['data'])
+            elif dataObj['type'] == 'PENT':
+                PENT.ReceivePacket(self, dataObj['data'])
+            elif dataObj['type'] == 'PLVT':
+                PLVT.ReceiveRequest(self, dataObj['data'])
             else:
                 self.logger_err.new_message("[" + self.ip + ":" + str(self.port) + ']<-- Got unknown message type (' + dataObj['type'] + ")", 2)
-
 
 
 class UDPHandler(DatagramProtocol):
@@ -65,8 +79,8 @@ class UDPHandler(DatagramProtocol):
         dataObj = Packet(packet_data).dataInterpreter()
         self.logger.new_message("[" + addr[0] + ":" + str(addr[1]) + "]<-- " + repr(datagram), 3)
 
-        if packet_type == None:
-            pass
+        if packet_type == 'ECHO':
+            ECHO.ReceiveRequest(self, dataObj, addr)
         else:
             self.logger_err.new_message("[" + addr[0] + ":" + str(addr[1]) + "][UDP] Received unknown packet type! (" + packet_type + ")", 2)
 
