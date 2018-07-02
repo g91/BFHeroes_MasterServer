@@ -79,6 +79,8 @@ class HANDLER(Protocol):
                 acct.ReceivePacket(self, dataObj, TXN)
             elif packet_type == "rank":
                 rank.ReceivePacket(self, dataObj, TXN)
+            elif packet_type == "pnow":
+                pnow.ReceiveRequest(self, dataObj, TXN)
             else:
                 self.logger_err.new_message("[" + self.ip + ":" + str(self.port) + ']<-- Got unknown message type (' + packet_type + ")", 2)
         elif not isValidPacket:
