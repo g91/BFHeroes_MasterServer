@@ -57,17 +57,17 @@ class Handler(Resource):
 
             response += '<walletAccount>'
             response += '<currency>_DV</currency>'  # valor points
-            response += '<balance>1</balance>'
+            response += '<balance>0</balance>'
             response += '</walletAccount>'
 
             response += '<walletAccount>'
             response += '<currency>_DB</currency>'  # battle funds
-            response += '<balance>2</balance>'
+            response += '<balance>0</balance>'
             response += '</walletAccount>'
 
             response += '<walletAccount>'
             response += '<currency>_DH</currency>'  # hero points
-            response += '<balance>3</balance>'
+            response += '<balance>0</balance>'
             response += '</walletAccount>'
 
             response += '</billingAccounts>'
