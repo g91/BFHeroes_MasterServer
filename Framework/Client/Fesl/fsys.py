@@ -107,7 +107,7 @@ def HandleGetPingSites(self):
     toSend.set("PacketData", "pingSite.1.addr", emuIp)
     toSend.set("PacketData", "pingSite.1.type", "1")
     toSend.set("PacketData", "pingSite.1.name", "nrt")
-    toSend.set("PacketData", "minPingSitesToPing", "2")
+    toSend.set("PacketData", "minPingSitesToPing", "0")
 
     Packet(toSend).send(self, "fsys", 0xC0000000, self.CONNOBJ.plasmaPacketID)
 

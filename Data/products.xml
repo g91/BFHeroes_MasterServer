@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+	<product overwrite="false" default_locale="en_US" status="Published" productId=""> 
+		<attributes>
+			<attribute value="WEST_Custom_Item_142" name="productName"/>
+			<attribute value="WEST_Custom_Item_142" name="Product Name"/>
+			<attribute value="WEST_Custom_Item_142" name="Long Description"/>
+			<attribute value="WEST_Custom_Item_142" name="Short Description"/>
+			<attribute value="BFHPC_Neck" name="groupName"/>
+			<attribute value="1" name="sortKey"/>
+			<attribute value="1" name="duration" />
+			<attribute value="MONTH" name="durationType"/>
+		</attributes>
+	</product>
+</products>

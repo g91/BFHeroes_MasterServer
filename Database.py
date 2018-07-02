@@ -35,7 +35,10 @@ class Database(object):
                 sys.exit(6)
 
     def initializeDatabase(self):
-        tables = []
+        tables = [{'Accounts': ['userID integer PRIMARY KEY AUTOINCREMENT UNIQUE', 'EMail string UNIQUE', 'Password string', 'Birthday string', 'Country string']},
+                  {'Personas': ['userID integer', 'personaID integer PRIMARY KEY AUTOINCREMENT UNIQUE', 'personaName string']},
+                  {'Sessions': ['userID integer UNIQUE', 'sessionKey string UNIQUE']},
+                  {'Stats': ['forID integer', 'IDType string', 'key string', 'value integer', 'text string']}]
 
         cursor = self.connection.cursor()
 
@@ -74,3 +77,112 @@ class Database(object):
 
         cursor.close()
 
+    def registerSession(self):
+        session = GenerateRandomString(27) + "."
+        return session
+
+    def loginUser(self, sessionKey):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Sessions WHERE sessionKey = ?", (sessionKey,))
+
+        data = cursor.fetchone()
+        cursor.close()
+
+        if data is not None:
+            userID = data[0]
+
+            cursor = self.connection.cursor()
+            cursor.execute("SELECT * FROM Accounts WHERE userID = ?", (userID,))
+
+            data = cursor.fetchone()
+
+            if data is not None:
+                nuid = data[1]
+                session = self.registerSession()
+
+                return {'UserID': userID, 'username': nuid, 'SessionID': session}
+
+        return {'UserID': -1}  # Incorrect sessionKey
+
+    def getUserPersonas(self, userID):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Personas WHERE userID = ?", (userID,))
+
+        data = cursor.fetchall()
+
+        if data is None:
+            return []
+
+        personas = []
+        for persona in data:
+            personas.append(persona[2])
+
+        return personas
+
+    def getAccountInfo(self, userID):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Accounts WHERE userID = ?", (userID,))
+
+        data = cursor.fetchone()
+
+        if data is not None:
+            return {'email': data[1], 'birthday': data[3], 'country': data[4]}
+
+        return None
+
+    def getPersonaInfo(self, personaName):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Personas WHERE personaName = ?", (personaName,))
+
+        data = cursor.fetchone()
+
+        if data is not None:
+            return {'userID': str(data[0]),
+                    'personaID': str(data[1]),
+                    'personaName': str(data[2])}
+        else:
+            return False
+
+    def GetStats(self, forID, idType, keys):
+        values = []
+
+        for key in keys:
+            cursor = self.connection.cursor()
+            cursor.execute("SELECT * FROM Stats WHERE forID = ? AND IDType = ? AND key = ?", (forID, idType, key,))
+
+            data = cursor.fetchone()
+
+            if data is not None:
+                values.append({'name': key, 'value': data[3], 'text': data[4]})
+            else:
+                values.append({'name': key, 'value': 0.0, 'text': ""})
+
+            self.connection.commit()
+            cursor.close()
+
+        return values
+
+    def loginPersona(self, userID, personaName):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Personas WHERE userID = ? AND personaName = ?", (userID, personaName,))
+
+        data = cursor.fetchone()
+
+        if data is None:
+            return None
+        else:
+            personaId = data[0]
+            session = self.registerSession()
+
+            return {'lkey': session, 'personaId': personaId}
+
+    def getPersonaName(self, personaID):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT personaName FROM Personas WHERE personaID = ?", (personaID,))
+
+        data = cursor.fetchone()
+
+        if data is not None:
+            return data[0]
+        else:
+            return False
