@@ -1,11 +1,14 @@
 from twisted.web.resource import Resource
 
+from Database import Database
 from Logger import Log
 
 logger = Log("SecureWebServer", "\033[36m")
 logger_err = Log("SecureWebServer", "\033[36;41m")
 
 header = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+
+db = Database()
 
 
 class Handler(Resource):
@@ -28,11 +31,20 @@ class Handler(Resource):
                 return response.encode()
         elif uri.find('/nucleus/entitlements/') != -1:
             userID = uri.split("/")[-1]
+
+            entitlements = db.getUserEntitlements(userID)
             logger.new_message("[MAGMA] Sending entitlements for userID " + str(userID), 2)
 
             response = header
-            response += '<entitlements count="0">'
-            # TODO: Entitlement code
+            response += '<entitlements>'
+            for entitlement in entitlements:
+                response += '<entitlement>'
+                response += '<entitlementId>' + str(entitlement['entitlementId']) + '</entitlementId>'
+                response += '<entitlementTag>' + str(entitlement['entitlementTag']) + '</entitlementTag>'
+                response += '<useCount>0</useCount>'
+                response += '<status>' + str(entitlement['status']) + '</status>'
+                response += '<userId>' + str(entitlement['userId']) + '</userId>'
+                response += '</entitlement>'
             response += '</entitlements>'
 
             return response.encode()

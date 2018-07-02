@@ -36,6 +36,7 @@ class Database(object):
 
     def initializeDatabase(self):
         tables = [{'Accounts': ['userID integer PRIMARY KEY AUTOINCREMENT UNIQUE', 'EMail string UNIQUE', 'Password string', 'Birthday string', 'Country string']},
+                  {'Entitlements': ['userID integer', 'entitlementId integer PRIMARY KEY AUTOINCREMENT UNIQUE', 'entitlementTag string', 'status string']},
                   {'Personas': ['userID integer', 'personaID integer PRIMARY KEY AUTOINCREMENT UNIQUE', 'personaName string']},
                   {'Sessions': ['userID integer UNIQUE', 'sessionKey string UNIQUE']},
                   {'Stats': ['forID integer', 'IDType string', 'key string', 'value integer', 'text string']}]
@@ -186,3 +187,19 @@ class Database(object):
             return data[0]
         else:
             return False
+
+    def getUserEntitlements(self, userID):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Entitlements WHERE userID = ?", (userID,))
+
+        data = cursor.fetchall()
+
+        entitlements = []
+        if data is not None:
+            for entitlement in data:
+                entitlements.append({'userId': str(entitlement[0]),
+                                     'entitlementId': str(entitlement[1]),
+                                     'entitlementTag': str(entitlement[2]).replace(":", "%3a"),
+                                     'status': str(entitlement[3])})
+        return entitlements
+
