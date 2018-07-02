@@ -208,3 +208,18 @@ class Database(object):
                                      'status': str(entitlement[3])})
         return entitlements
 
+    def updateStat(self, userID, type, key, value, text):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM Stats WHERE forID = ? AND IDType = ? AND key = ?", (userID, type, key))
+
+        data = cursor.fetchone()
+
+        if data is None:
+            cursor = self.connection.cursor()
+            cursor.execute("INSERT INTO Stats (forID, IDType, key, value, text) VALUES (?,?,?,?,?)", (userID, type, key, value, text))
+        else:
+            cursor = self.connection.cursor()
+            cursor.execute("UPDATE Stats SET value = ? AND text = ? WHERE forID = ? AND IDType = ? AND key = ?", (value, text, userID, type, key))
+
+        self.connection.commit()
+        cursor.close()
