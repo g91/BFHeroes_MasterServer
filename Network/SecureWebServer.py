@@ -84,5 +84,8 @@ class Handler(Resource):
 
             request.setHeader('content-type', 'text/plain; charset=utf-8')
             return '<update><id>1</id><name>Test</name><state>ACTIVE</state><type>server</type><status>Online</status><realid>' + uri.split(':')[1] + '</realid></update>'
+        elif uri.split(':')[0] == '/relationships/status/server':
+            request.setHeader('content-type', 'text/plain; charset=utf-8')
+            return '<update><id>1</id><name>Test</name><state>ACTIVE</state><type>server</type><status>Online</status><realid>' + uri.split(':')[1] + '</realid></update>'
         else:
             logger_err.new_message("Unknown POST: " + request.uri, 2)
