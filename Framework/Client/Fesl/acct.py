@@ -85,7 +85,7 @@ def HandleNuLookupUserInfo(self, data):
         username = data.get("PacketData", "userInfo." + str(user) + ".userName")
         info = db.getPersonaInfo(username)
 
-        if info is not None:
+        if info is not False:
             toSend.set("PacketData", "userInfo." + str(count) + ".userName", info['personaName'])
             toSend.set("PacketData", "userInfo." + str(count) + ".userId", info['personaID'])
             toSend.set("PacketData", "userInfo." + str(count) + ".masterUserId", info['userID'])
